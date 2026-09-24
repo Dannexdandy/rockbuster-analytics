@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:16
+    container_name: rockbuster_db
+    environment:
+      POSTGRES_USER: rockbuster
+      POSTGRES_PASSWORD: rockbuster
+      POSTGRES_DB: dvdrental
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/data:ro
+      - ./sql:/sql:ro
+      - ./sql/00_setup/load.sh:/docker-entrypoint-initdb.d/load.sh:ro
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:
