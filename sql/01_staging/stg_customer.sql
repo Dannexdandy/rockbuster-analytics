@@ -3,7 +3,7 @@ CREATE OR REPLACE VIEW stg_customer AS
         customer_id,
         first_name,
         last_name,
-        first_name || '' || last_name AS full_name,
+        first_name || ' ' || last_name AS full_name,
         email,
         address_id,
         store_id,
