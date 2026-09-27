@@ -11,7 +11,7 @@ SELECT
     ROUND(SUM(p.amount), 2) AS total_spent,
     ROUND(AVG(p.amount), 2) AS avg_spent,
     MAX(p.payment_day) AS last_payment_day,
-    (SELECT as_of_date FROM anchor) - MAX(p.payment_day) AS recency_day
+    (SELECT as_of_date FROM anchor) - MAX(p.payment_day) AS recency_days
 FROM stg_customer c
 INNER JOIN stg_payment p
     ON c.customer_id = p.customer_id
