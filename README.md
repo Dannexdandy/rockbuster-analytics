@@ -7,7 +7,7 @@ and a findings report with recommendations.
 ![CI](https://github.com/USER/REPO/actions/workflows/ci.yml/badge.svg)
 
 ## Key findings
-- (your top 3–4 numbers from FINDINGS.md)
+- (my top 3–4 numbers from FINDINGS.md)
 
 Full analysis → [reports/FINDINGS.md](reports/FINDINGS.md)
 Data model → [docs/erd.md](docs/erd.md)
