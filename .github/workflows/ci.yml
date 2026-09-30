@@ -1,0 +1,43 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  data-quality:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: rockbuster
+          POSTGRES_PASSWORD: rockbuster
+          POSTGRES_DB: dvdrental
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      PGPASSWORD: rockbuster
+      PGHOST: localhost
+      PGUSER: rockbuster
+      PGDATABASE: dvdrental
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install psql
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - name: Load seed data
+        run: pg_restore -h localhost -U rockbuster -d dvdrental --no-owner data/dvdrental.tar
+      - name: Apply indexes
+        run: psql -f sql/00_setup/indexes.sql
+      - name: Build staging
+        run: for f in sql/01_staging/*.sql; do psql -v ON_ERROR_STOP=1 -f "$f"; done
+      - name: Build marts
+        run: for f in sql/02_marts/*.sql; do psql -v ON_ERROR_STOP=1 -f "$f"; done
+      - name: Data-quality checks
+        run: for f in sql/04_quality/*.sql; do psql -v ON_ERROR_STOP=1 -f "$f"; done
